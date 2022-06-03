@@ -7,9 +7,9 @@ import os
 os.path.exists("put your file name here")
 
 pytesseract.pytesseract.tesseract_cmd = '/usr/local/Cellar/tesseract/5.1.0/bin/tesseract'
-#img = cv2.imread('telegraph_new.jpeg')
-image = cv2.imread('telegraph_new.jpeg')
-#print(img)
+
+#image = cv2.imread('telegraph_new.jpeg')
+image = cv2.imread('/Users/marc/PycharmProjects/Masterarbeit_OCR/venv/Daily Express/_106419769_dailyexpress.jpg', 0)
 
 
 # get grayscale image
@@ -70,9 +70,13 @@ def match_template(image, template):
     return cv2.matchTemplate(image, template, cv2.TM_CCOEFF_NORMED)
 
 gray = get_grayscale(image)
-thresh = thresholding(gray)
-opening = opening(gray)
-canny = canny(gray)
+noise = remove_noise(gray)
+thresh = thresholding(noise)
+dila = dilate(thresh)
+ero = erode(dila)
+opening = opening(ero)
+canny = canny(opening)
+skew = deskew(canny)
 
 
 # Adding custom options
